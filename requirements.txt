@@ -1,0 +1,6 @@
+streamlit
+os
+langchain_openai 
+langchain_google_genai 
+langchain_anthropic
+numpy 
