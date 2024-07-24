@@ -138,7 +138,7 @@ def Translate(Eng1):
    Kor2, Back2, Sim2 = st.columns([4,4,1])
 
    with Kor2:
-      st.markdown("**DeelL**")
+      st.markdown("**DeepL**")
       st.write(Deepl_R)
 
    with Back2:
