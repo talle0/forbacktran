@@ -45,25 +45,25 @@ def Translate(Eng1):
    GPT2 = chatgpt2.invoke(Q1)
 
    # 역번역 모듈
-   Q2Goo="다음 문장을 영어로 번역해줘,  \
-      미국인들이 자주 쓰는 표현을 사용해서 쉽게 이해할 수 있게 하고 \
-      되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
-      번역 결과만 보여줘  : " + Google1.content
+   Q2Goo="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : " + Google1.content
 
-   Q2Gpt1="다음 문장을 영어로 번역해줘,  \
-      미국인들이 자주 쓰는 표현을 사용해서 쉽게 이해할 수 있게 하고 \
-      되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
-      번역 결과만 보여줘  : " + GPT1 
+   Q2Gpt1="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : " + GPT1 
 
-   Q2Gpt2="다음 문장을 영어로 번역해줘,  \
-      미국인들이 자주 쓰는 표현을 사용해서 쉽게 이해할 수 있게 하고 \
-      되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
-      번역 결과만 보여줘  : " + GPT2.content
+   Q2Gpt2="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : "  + GPT2.content
 
-   Q2Claud="다음 문장을 영어로 번역해줘,  \
-      미국인들이 자주 쓰는 표현을 사용해서 쉽게 이해할 수 있게 하고 \
-      되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
-      번역 결과만 보여줘  : " + Claude1.content
+   Q2Claud="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : "  + Claude1.content
 
    BGoogle1 = google.invoke(Q2Goo)
    BGPT1 = google.invoke(Q2Gpt1)
@@ -157,10 +157,10 @@ def Translate(Eng1):
    if Kor1=="":
       st.warning ("원하는 번역 문장을 넣어주세요") 
    else:
-      QKor1="다음 문장을 영어로 번역해줘,  \
-         미국인들이 자주 쓰는 표현을 사용해서 쉽게 이해할 수 있게 하고 \
-         되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
-         번역 결과만 보여줘  : " + Kor1
+      QKor1="Please translate the following sentence into English,  \
+         using common American expressions for easy understanding \
+         and maintaining the original sentence structure as much as possible. \
+         Show only the translated sentence  : " + Kor1
 
       BKor1 = google.invoke(QKor1)
       em_goo = embedding.embed_query(BKor1.content)
@@ -170,7 +170,7 @@ def Translate(Eng1):
 
 
 # Streamlit 시작
-st.title("Forward-Backward Translantion")
+st.title("순방향-역방향 번역 검증")
 
 with st.form("Form 1"):
     Eng1 = st.text_area("Input original sentence (English)", max_chars=2000, height=50,value="")
