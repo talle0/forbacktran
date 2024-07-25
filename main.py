@@ -54,12 +54,24 @@ def Translate(Eng1):
       using common American expressions for easy understanding \
       and maintaining the original sentence structure as much as possible. \
       Show only the translated sentence  : " + Google1.content
+   Q2Goo="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : " + Google1.content
 
    Q2Gpt1="Please translate the following sentence into English,  \
       using common American expressions for easy understanding \
       and maintaining the original sentence structure as much as possible. \
       Show only the translated sentence  : " + GPT1 
+   Q2Gpt1="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : " + GPT1 
 
+   Q2Gpt2="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : "  + GPT2.content
    Q2Gpt2="Please translate the following sentence into English,  \
       using common American expressions for easy understanding \
       and maintaining the original sentence structure as much as possible. \
@@ -192,6 +204,10 @@ def Translate(Eng1):
          using common American expressions for easy understanding \
          and maintaining the original sentence structure as much as possible. \
          Show only the translated sentence  : " + Kor1
+      QKor1="Please translate the following sentence into English,  \
+         using common American expressions for easy understanding \
+         and maintaining the original sentence structure as much as possible. \
+         Show only the translated sentence  : " + Kor1
 
       BKor1 = google.invoke(QKor1)
       BDeepl2 = str(deeplt.translate_text(Kor1, target_lang="en-us"))
@@ -208,6 +224,7 @@ def Translate(Eng1):
       st.write("원 문장과의 유사도: ", sKor2)
 
 # Streamlit 시작
+st.title("순방향-역방향 번역 검증")
 st.title("순방향-역방향 번역 검증")
 
 with st.form("Form 1"):
