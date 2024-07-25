@@ -108,7 +108,7 @@ def Translate(Eng1):
       st.write(GPT1)
 
    with Back1:
-      st.markdown("**Back-Translation**")
+      st.markdown("**Back-Translation (google)**")
       st.write(BGPT1.content)
 
    with Sim1:
@@ -187,7 +187,7 @@ def Translate(Eng1):
    
    Kor1 = st.text_area("Input your sentence (German)", max_chars=2000, height=50,value="")
    if Kor1=="":
-      st.warning ("원하는 번역 문장을 넣어주세요") 
+      st.warning ("원하는 독일어 번역 문장을 넣어주세요") 
    else:
       QKor1="다음 문장을 한국어로 번역해줘,  \
          한국인들이 자주 쓰는 표현을 사용해서 쉽게 이해할 수 있게 하고 \
@@ -195,7 +195,9 @@ def Translate(Eng1):
          번역 결과만 보여줘  : " + Kor1
 
       BKor1 = google.invoke(QKor1)
-      st.write("한국어 번역 :", BKor1.content)
+      BDeepl2 = str(deeplt.translate_text(BKor1.content, target_lang="ko"))
+      st.write("한국어 번역 (google) :", BKor1.content)
+      st.write("한국어 번역 (deepl) :", BDeepl2)
 
       # 한국어 역번역  
       QKor2="Please translate the following sentence into English,  \
@@ -204,10 +206,19 @@ def Translate(Eng1):
          Show only the translated sentence  : " + BKor1.content
       
       BKor2 = google.invoke(QKor2)
+      BDeepl3 = str(deeplt.translate_text(BDeepl2, target_lang="en-us"))
+
       em_goo = embedding.embed_query(BKor2.content)
+      em_deepl2 = embedding.embed_query(BDeepl3)
+      st.markdown("___")
+
       sKor1 = cos_sim(em_Eng1, em_goo)
-      st.write("역번역: ", BKor2.content)
-      st.write("유사도: ", sKor1)
+      sKor2 = cos_sim(em_Eng1, em_deepl2)
+
+      st.write("역번역 (google): ", BKor2.content)
+      st.write("유사도 (google): ", sKor1)
+      st.write("역번역 (deepl): ", BKor2.content)
+      st.write("유사도 (deepl): ", sKor2)
 
 
 # Streamlit 시작
@@ -218,7 +229,7 @@ with st.form("Form 1"):
     s_state=st.form_submit_button("submit")
     if s_state:
         if (input == ""):
-            st.warning ("원하는 번역 문장을 넣어주세요") 
+            st.warning ("원하는 영어 번역 문장을 넣어주세요") 
         else:
             Translate(Eng1)
 

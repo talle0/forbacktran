@@ -1,6 +1,7 @@
 import streamlit as st
 
 import os
+import deepl
 from langchain_openai import OpenAI
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -15,12 +16,15 @@ import numpy as np
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
 os.environ["ANTHROPIC_API_KEY"] = st.secrets["ANTHROPIC_API_KEY"]
+DEEPL_API_KEY = st.secrets["DEEPL_API_KEY"]
 
 # LLM 모델 설정
 chatgpt=OpenAI(model_name="gpt-3.5-turbo-instruct", temperature=0)
 chatgpt2=ChatOpenAI(model_name="gpt-4o", temperature=0)
 google = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0)
 claude = ChatAnthropic(model="claude-3-sonnet-20240229", temperature=0)
+
+deeplt = deepl.Translator(DEEPL_API_KEY)
 
 
 # 임베딩
@@ -43,6 +47,7 @@ def Translate(Eng1):
    GPT1 = chatgpt.invoke(Q1)
    Claude1 = claude.invoke(Q1)
    GPT2 = chatgpt2.invoke(Q1)
+   Deepl_R = str(deeplt.translate_text(Eng1, target_lang="ko"))
 
    # 역번역 모듈
    Q2Goo="Please translate the following sentence into English,  \
@@ -64,11 +69,17 @@ def Translate(Eng1):
       using common American expressions for easy understanding \
       and maintaining the original sentence structure as much as possible. \
       Show only the translated sentence  : "  + Claude1.content
+   
+   Q2Deepl="Please translate the following sentence into English,  \
+      using common American expressions for easy understanding \
+      and maintaining the original sentence structure as much as possible. \
+      Show only the translated sentence  : " + Deepl_R
 
    BGoogle1 = google.invoke(Q2Goo)
    BGPT1 = google.invoke(Q2Gpt1)
    BGPT2 = google.invoke(Q2Gpt2)
    BClaude1 = google.invoke(Q2Claud)
+   BDeepl = google.invoke(Q2Deepl)
 
    # 유사도 검증 모듈
    em_Eng1 = embedding.embed_query(Eng1)
@@ -76,11 +87,13 @@ def Translate(Eng1):
    em_gpt1 = embedding.embed_query(BGPT1.content)
    em_claud = embedding.embed_query(BClaude1.content)
    em_gpt2 = embedding.embed_query(BGPT2.content)
+   em_deepl = embedding.embed_query(BDeepl.content)
 
    sGoogle1 = cos_sim(em_Eng1, em_goo)
    sGPT1 = cos_sim(em_Eng1, em_gpt1)
    sClaude1 = cos_sim(em_Eng1, em_claud)
    sGPT2 = cos_sim(em_Eng1, em_gpt2)
+   sDeepl = cos_sim(em_Eng1, em_deepl)
 
    st.header("Forward-Backward Translantion", divider='rainbow') 
    #
@@ -93,7 +106,7 @@ def Translate(Eng1):
       st.write(GPT1)
 
    with Back1:
-      st.markdown("**Back-Translation**")
+      st.markdown("**Back-Translation (google)**")
       st.write(BGPT1.content)
 
    with Sim1:
@@ -151,11 +164,29 @@ def Translate(Eng1):
       st.markdown("&nbsp; ")
       st.write(round(sClaude1,3))
 
+   #
+   # Column for Deepl
+   #
+   Kor2, Back2, Sim2 = st.columns([4,4,1])
+
+   with Kor2:
+      st.markdown("**DeepL**")
+      st.write(Deepl_R)
+
+   with Back2:
+      st.markdown("&nbsp; ")
+      st.write(BDeepl.content)
+
+   with Sim2:
+      st.markdown("&nbsp; ")
+      st.write(round(sDeepl,3))
+
+
    # Your Choice
    
    Kor1 = st.text_area("Input your sentence (Korean)", max_chars=2000, height=50,value="")
    if Kor1=="":
-      st.warning ("원하는 번역 문장을 넣어주세요") 
+      st.warning ("원하는 한국어 번역 문장을 넣어주세요") 
    else:
       QKor1="Please translate the following sentence into English,  \
          using common American expressions for easy understanding \
@@ -163,11 +194,18 @@ def Translate(Eng1):
          Show only the translated sentence  : " + Kor1
 
       BKor1 = google.invoke(QKor1)
-      em_goo = embedding.embed_query(BKor1.content)
-      sKor1 = cos_sim(em_Eng1, em_goo)
-      st.write("역번역: ", BKor1.content)
-      st.write("유사도: ", sKor1)
+      BDeepl2 = str(deeplt.translate_text(Kor1, target_lang="en-us"))
 
+      em_goo = embedding.embed_query(BKor1.content)
+      em_deepl2 = embedding.embed_query(BDeepl2)
+
+      sKor1 = cos_sim(em_Eng1, em_goo)
+      sKor2 = cos_sim(em_Eng1, em_deepl2)
+
+      st.write("영어 번역 (google) :", BKor1.content)
+      st.write("원 문장과의 유사도: ", sKor1)
+      st.write("영어 번역 (deepl) :", BDeepl2)
+      st.write("원 문장과의 유사도: ", sKor2)
 
 # Streamlit 시작
 st.title("순방향-역방향 번역 검증")
