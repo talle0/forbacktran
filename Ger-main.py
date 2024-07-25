@@ -42,7 +42,7 @@ def Translate(Eng1):
       되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
       번역 결과만 보여줘  : " + Eng1
 
-   Google1 = google.invoke(Q1)
+   #Google1 = google.invoke(Q1)
    GPT1 = chatgpt.invoke(Q1)
    Claude1 = claude.invoke(Q1)
    #GPT2 = chatgpt2.invoke(Q1)
@@ -52,10 +52,10 @@ def Translate(Eng1):
    # print(type(Deepl_R))
    
    # 역번역 모듈
-   Q2Goo="Please translate the following sentence into English,  \
-    using common American expressions for easy understanding \
-    and maintaining the original sentence structure as much as possible. \
-    Show only the translated sentence  : " + Google1.content
+   # Q2Goo="Please translate the following sentence into English,  \
+   #  using common American expressions for easy understanding \
+   #  and maintaining the original sentence structure as much as possible. \
+   #  Show only the translated sentence  : " + Google1.content
 
    Q2Gpt1="Please translate the following sentence into English,  \
     using common American expressions for easy understanding \
@@ -77,7 +77,7 @@ def Translate(Eng1):
     and maintaining the original sentence structure as much as possible. \
     Show only the translated sentence  : " + Claude1.content
 
-   BGoogle1 = google.invoke(Q2Goo)
+   #BGoogle1 = google.invoke(Q2Goo)
    BGPT1 = google.invoke(Q2Gpt1)
    #BGPT2 = google.invoke(Q2Gpt2)
    BDeepl = google.invoke(Q2Deepl)
@@ -85,13 +85,13 @@ def Translate(Eng1):
 
    # 유사도 검증 모듈
    em_Eng1 = embedding.embed_query(Eng1)
-   em_goo = embedding.embed_query(BGoogle1.content)
+   #em_goo = embedding.embed_query(BGoogle1.content)
    em_gpt1 = embedding.embed_query(BGPT1.content)
    em_claud = embedding.embed_query(BClaude1.content)
    #em_gpt2 = embedding.embed_query(BGPT2.content)
    em_deepl = embedding.embed_query(BDeepl.content)
 
-   sGoogle1 = cos_sim(em_Eng1, em_goo)
+   #sGoogle1 = cos_sim(em_Eng1, em_goo)
    sGPT1 = cos_sim(em_Eng1, em_gpt1)
    sClaude1 = cos_sim(em_Eng1, em_claud)
    #sGPT2 = cos_sim(em_Eng1, em_gpt2)
@@ -152,19 +152,19 @@ def Translate(Eng1):
    #
    # Column for Gemini
    #
-   Kor3, Back3, Sim3 = st.columns([4,4,1])
+   # Kor3, Back3, Sim3 = st.columns([4,4,1])
 
-   with Kor3:
-      st.markdown("**Google - Gemini**")
-      st.write(Google1.content)
+   # with Kor3:
+   #    st.markdown("**Google - Gemini**")
+   #    st.write(Google1.content)
 
-   with Back3:
-      st.markdown("&nbsp; ")
-      st.write(BGoogle1.content)
+   # with Back3:
+   #    st.markdown("&nbsp; ")
+   #    st.write(BGoogle1.content)
 
-   with Sim3:
-      st.markdown("&nbsp; ")
-      st.write(round(sGoogle1,3))
+   # with Sim3:
+   #    st.markdown("&nbsp; ")
+   #    st.write(round(sGoogle1,3))
 
    #
    # Column for Claud
@@ -194,30 +194,30 @@ def Translate(Eng1):
          되도록 원문과 같은 문장 형태를 가지도록 만들어주고, \
          번역 결과만 보여줘  : " + Kor1
 
-      BKor1 = google.invoke(QKor1)
-      BDeepl2 = str(deeplt.translate_text(BKor1.content, target_lang="ko"))
-      st.write("한국어 번역 (google) :", BKor1.content)
+      BKor1 = chatgpt.invoke(QKor1)
+      BDeepl2 = str(deeplt.translate_text(Kor1, target_lang="ko"))
+      st.write("한국어 번역 (chatGPT) :", BKor1.strip())
       st.write("한국어 번역 (deepl) :", BDeepl2)
 
       # 한국어 역번역  
       QKor2="Please translate the following sentence into English,  \
          using common American expressions for easy understanding \
          and maintaining the original sentence structure as much as possible. \
-         Show only the translated sentence  : " + BKor1.content
+         Show only the translated sentence  : " + BKor1
       
-      BKor2 = google.invoke(QKor2)
+      BKor2 = chatgpt.invoke(QKor2)
       BDeepl3 = str(deeplt.translate_text(BDeepl2, target_lang="en-us"))
 
-      em_goo = embedding.embed_query(BKor2.content)
+      em_chatgpt2 = embedding.embed_query(BKor2)
       em_deepl2 = embedding.embed_query(BDeepl3)
       st.markdown("___")
 
-      sKor1 = cos_sim(em_Eng1, em_goo)
+      sKor1 = cos_sim(em_Eng1, em_chatgpt2)
       sKor2 = cos_sim(em_Eng1, em_deepl2)
 
-      st.write("역번역 (google): ", BKor2.content)
-      st.write("유사도 (google): ", sKor1)
-      st.write("역번역 (deepl): ", BKor2.content)
+      st.write("역번역 (chatGPT): ", BKor2.strip())
+      st.write("유사도 (chatGPT): ", sKor1)
+      st.write("역번역 (deepl): ", BDeepl3)
       st.write("유사도 (deepl): ", sKor2)
 
 
