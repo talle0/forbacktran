@@ -225,7 +225,6 @@ def Translate(Eng1):
 
 # Streamlit 시작
 st.title("순방향-역방향 번역 검증")
-st.title("순방향-역방향 번역 검증")
 
 with st.form("Form 1"):
     Eng1 = st.text_area("Input original sentence (English)", max_chars=2000, height=50,value="")
